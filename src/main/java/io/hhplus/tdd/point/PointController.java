@@ -42,8 +42,10 @@ public class PointController {
     public List<PointHistory> history(
             @PathVariable long id
     ) {
-        return List.of();
+//        return List.of();
+          return pointHistoryTable.selectAllByUserId(id);
     }
+
 
     /**
      * TODO - 특정 유저의 포인트를 충전하는 기능을 작성해주세요.

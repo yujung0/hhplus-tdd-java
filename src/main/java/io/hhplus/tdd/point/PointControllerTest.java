@@ -45,7 +45,7 @@ private PointController pointController;
 }
 
 @Test
-@DisplayName("신규 유저 포인트 충전/이용 내역을 조회한다.")
+@DisplayName("유저 포인트 충전/이용 내역을 조회한다.")
     void NewUserPointChargeAndUseInquiry() {
         // 이유 : assert 외 출력으로 확인하게끔 진행
         // given
