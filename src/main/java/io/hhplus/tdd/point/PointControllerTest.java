@@ -20,7 +20,7 @@ private PointController pointController;
     void setUp() {
     userPointTable = new UserPointTable();
     pointHistoryTable = new PointHistoryTable();
-    pointController = new PointController();
+    pointController = new PointController(userPointTable, pointHistoryTable);
 
 
 }

@@ -16,7 +16,7 @@ public class PointController {
 
     private final UserPointTable userPointTable;
     private final PointHistoryTable pointHistoryTable;
-    // int userPointTable; // int pointHistoryTable;
+
 
     public PointController(UserPointTable userPointTable, PointHistoryTable pointHistoryTable)
     {
