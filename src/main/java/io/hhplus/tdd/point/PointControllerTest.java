@@ -21,6 +21,8 @@ private PointController pointController;
     userPointTable = new UserPointTable();
     pointHistoryTable = new PointHistoryTable();
     pointController = new PointController();
+
+
 }
 
 @Test
@@ -41,4 +43,11 @@ private PointController pointController;
         log.info(e.getMessage());
     }
 }
+
+@Test
+@DisplayName("신규 유저 포인트 충전/이용 내역을 조회한다.")
+    void NewUserPointInquiry() {
+
+    }
+
 }
