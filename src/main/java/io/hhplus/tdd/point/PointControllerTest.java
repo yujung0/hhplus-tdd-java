@@ -3,7 +3,6 @@ package io.hhplus.tdd.point;
 import io.hhplus.tdd.database.PointHistoryTable;
 import io.hhplus.tdd.database.UserPointTable;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,6 +27,7 @@ private PointController pointController;
 @DisplayName("신규 유저 포인트 조회 시 0원을 반환한다.")
     void NewUserCheck0won () {
     try {
+        // 이유 : 아직 회원의 포인트 충전 전이므로, 포인트 0일 경우를 가정하여 테스트 케이스 작성
         // given
         long userId = 1L; // 임의로 지정한 테스트 값
 
