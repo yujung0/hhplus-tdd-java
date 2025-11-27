@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 @Slf4j
 public class PointControllerTest {
 
@@ -21,8 +23,6 @@ private PointController pointController;
     userPointTable = new UserPointTable();
     pointHistoryTable = new PointHistoryTable();
     pointController = new PointController(userPointTable, pointHistoryTable);
-
-
 }
 
 @Test
@@ -46,8 +46,22 @@ private PointController pointController;
 
 @Test
 @DisplayName("신규 유저 포인트 충전/이용 내역을 조회한다.")
-    void NewUserPointInquiry() {
+    void NewUserPointChargeAndUseInquiry() {
+        // 이유 : assert 외 출력으로 확인하게끔 진행
+        // given
+        long userId = 1L;
+        pointHistoryTable.insert(1L, 500, TransactionType.CHARGE, 20251127); // 충전 시 조회 확인 (0일 경우 확인 시, 주석)
 
+        // when
+        List<PointHistory> resultCharge = pointHistoryTable.selectAllByUserId(userId);
+
+        // then
+        if (resultCharge.isEmpty()) {
+            System.out.println("아이디 '" + userId + "'의 포인트가 없습니다.");
+        } else {
+            System.out.println("아이디 \'" + userId + "\'의 포인트는 " + resultCharge.get(0).amount() + "입니다.");
+        }
+        
     }
 
 }
