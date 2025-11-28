@@ -18,10 +18,12 @@ public class PointController {
     private final PointHistoryTable pointHistoryTable;
 
 
+
     public PointController(UserPointTable userPointTable, PointHistoryTable pointHistoryTable)
     {
         this.userPointTable = userPointTable;
         this.pointHistoryTable = pointHistoryTable;
+
     }
 
     /**
@@ -51,11 +53,19 @@ public class PointController {
      * TODO - 특정 유저의 포인트를 충전하는 기능을 작성해주세요.
      */
     @PatchMapping("{id}/charge")
-    public UserPoint charge(
+    public UserPoint charge
+    (
             @PathVariable long id,
             @RequestBody long amount
+
     ) {
-        return new UserPoint(0, 0, 0);
+        long NowPoint = userPointTable.selectById(id).point(); // 현재 포인트
+        long TotalPoint = NowPoint + amount;
+
+        UserPoint InsetTotalPoint = userPointTable.insertOrUpdate(id, TotalPoint);
+        pointHistoryTable.insert(id, TotalPoint, TransactionType.CHARGE, InsetTotalPoint.updateMillis());
+
+        return new UserPoint(id, TotalPoint, InsetTotalPoint.updateMillis());
     }
 
     /**
