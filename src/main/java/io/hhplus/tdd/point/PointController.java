@@ -60,10 +60,10 @@ public class PointController {
 
     ) {
         long NowPoint = userPointTable.selectById(id).point(); // 현재 포인트
-        long TotalPoint = NowPoint + amount;
+        long TotalPoint = NowPoint + amount; // 충전 후 현재 포인트 (현재 포인트 + 충전액)
 
         UserPoint InsetTotalPoint = userPointTable.insertOrUpdate(id, TotalPoint);
-        pointHistoryTable.insert(id, TotalPoint, TransactionType.CHARGE, InsetTotalPoint.updateMillis());
+        pointHistoryTable.insert(id, amount, TransactionType.CHARGE, InsetTotalPoint.updateMillis());
 
         return new UserPoint(id, TotalPoint, InsetTotalPoint.updateMillis());
     }
