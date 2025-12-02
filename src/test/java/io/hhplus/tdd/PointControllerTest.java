@@ -7,6 +7,7 @@ import io.hhplus.tdd.point.PointHistory;
 import io.hhplus.tdd.point.TransactionType;
 import io.hhplus.tdd.point.UserPoint;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,15 +25,15 @@ private UserPoint userPoint;
 
 
 
-@BeforeEach
+    @BeforeEach
     void setUp() {
     userPointTable = new UserPointTable();
     pointHistoryTable = new PointHistoryTable();
     pointController = new PointController(userPointTable, pointHistoryTable);
 }
 
-@Test
-@DisplayName("신규 유저 포인트 조회 시 0원을 반환한다.")
+    @Test
+    @DisplayName("신규 유저 포인트 조회 시 0원을 반환한다.")
     void NewUserCheck0won () {
     try {
         // 이유 : 아직 회원의 포인트 충전 전이므로, 포인트 0일 경우를 가정하여 테스트 케이스 작성
@@ -50,8 +51,8 @@ private UserPoint userPoint;
     }
 }
 
-@Test
-@DisplayName("유저 포인트 충전/이용 내역을 조회한다. (포인트 있는 유저)")
+    @Test
+    @DisplayName("유저 포인트 충전/이용 내역을 조회한다. (포인트 있는 유저)")
     void NewUserPointChargeAndUseInquiry_A() {
         // 이유 : 한 가지 테스트는 한 가지 검증만 한다는 규칙에 따라, 포인트 유무에 따른 케이스 분리
         // given - A (포인트 있는 유저)
@@ -85,8 +86,8 @@ private UserPoint userPoint;
     }
 
 
-@Test
-@DisplayName("유저의 포인트를 충전한다.")
+    @Test
+    @DisplayName("유저의 포인트를 충전한다.")
     void NewUserAddPointTest() {
     // 이유 : 포인트가 0인 유저에게 포인트 5000을 충전하고 확인한다.
     // given
@@ -105,20 +106,19 @@ private UserPoint userPoint;
 
 }
 
-@Test
-@DisplayName("유저의 포인트를 사용한다.")
+    @Test
+    @DisplayName("유저의 포인트를 사용한다. (잔액>사용액)")
 
-    void NewUserPointUse() {
-    // 이유 :
+    void NewUserPointUse() throws Exception {
+    // 이유 : 잔액 > 사용액일 경우 테스트
     // given
     long userId = 1L;
-
     pointController.charge(userId, 5000L); // 포인트 충전
 
     UserPoint beforeUse = pointController.point(userId);
     Assertions.assertEquals(5000L, beforeUse.point()); // 사용 전 포인트 확인
 
-    System.out.println("유저의 포인트 잔액 : " + pointController.point(userId));
+    System.out.println("유저의 포인트 잔액 : " + pointController.point(userId).point());
 
     // when
     pointController.use(userId, 500L); // 포인트 500 사용
@@ -126,7 +126,31 @@ private UserPoint userPoint;
     // then
     UserPoint afterUse = pointController.point(userId);
     Assertions.assertEquals(4500L, afterUse.point()); // 사용 후 잔액 확인
-    System.out.println("유저의 포인트 잔액 : " + pointController.point(userId));
+    System.out.println("유저의 포인트 잔액 : " + pointController.point(userId).point());
 }
+
+
+    @Test
+    @DisplayName("유저의 포인트를 사용한다. (잔액<사용액)")
+    void NewUserMinusPointUse() throws Exception {
+        // 이유 : 잔액 < 사용액일 경우 테스트
+        // given
+        long userId = 1L;
+        pointController.charge(userId, 5000L); // 포인트 충전
+
+        UserPoint beforeUse = pointController.point(userId);
+        Assertions.assertEquals(5000L, beforeUse.point()); // 사용 전 포인트 확인
+
+        System.out.println("유저의 포인트 잔액 : " + pointController.point(userId).point());
+
+        // when
+        Assertions.assertThrows(Exception.class , ()-> pointController.use(userId, 6000L));
+
+        // then
+        UserPoint afterUse = pointController.point(userId);
+        Assertions.assertEquals(5000L, afterUse.point()); // 사용 후 잔액 확인
+        System.out.println("유저의 포인트 잔액 : " + pointController.point(userId).point());
+    }
+
 
 }
