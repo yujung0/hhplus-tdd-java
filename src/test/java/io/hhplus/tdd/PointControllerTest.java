@@ -91,17 +91,17 @@ private UserPoint userPoint;
     // 이유 : 포인트가 0인 유저에게 포인트 5000을 충전하고 확인한다.
     // given
     long userId = 1L;
-    UserPoint before = pointController.point(userId);
-    Assertions.assertEquals(0L, before.point()); // 충전 전 포인트 확인
+    UserPoint beforeCharge = pointController.point(userId);
+    Assertions.assertEquals(0L, beforeCharge.point()); // 충전 전 포인트 확인
 
     // when
     pointController.charge(userId, 5000L);
 
     // then
-    UserPoint after = pointController.point(userId);
-    Assertions.assertEquals(5000L, after.point()); // 충전 후 포인트 확인
+    UserPoint afterCharge = pointController.point(userId);
+    Assertions.assertEquals(5000L, afterCharge.point()); // 충전 후 포인트 확인
 
-    System.out.println("유저 " + userId + "의 현재 포인트는 " + after.point() + "입니다.");
+    System.out.println("유저 " + userId + "의 현재 포인트는 " + afterCharge.point() + "입니다.");
 
 }
 
@@ -111,10 +111,22 @@ private UserPoint userPoint;
     void NewUserPointUse() {
     // 이유 :
     // given
+    long userId = 1L;
+
+    pointController.charge(userId, 5000L); // 포인트 충전
+
+    UserPoint beforeUse = pointController.point(userId);
+    Assertions.assertEquals(5000L, beforeUse.point()); // 사용 전 포인트 확인
+
+    System.out.println("유저의 포인트 잔액 : " + pointController.point(userId));
 
     // when
+    pointController.use(userId, 500L); // 포인트 500 사용
 
     // then
+    UserPoint afterUse = pointController.point(userId);
+    Assertions.assertEquals(4500L, afterUse.point()); // 사용 후 잔액 확인
+    System.out.println("유저의 포인트 잔액 : " + pointController.point(userId));
 }
 
 }
